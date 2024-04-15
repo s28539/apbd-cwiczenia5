@@ -1,4 +1,6 @@
-﻿using Tutorial4.DataBase;
+﻿using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.AspNetCore.Mvc;
+using Tutorial4.DataBase;
 
 namespace Tutorial4;
 
@@ -32,15 +34,11 @@ public static class AnimalEndpoints
             }
             if (Animal == null)
             {
-                return Results.Problem("No animal in database");
+                return Results.NotFound("No animal in database");
             }
             return Results.Ok(Animal);
         });
-
-        app.MapPost("animals", () =>
-        {
-            return Results.Created();
-        });
+        
         app.MapPut("/animals/{id}", (int id, Animal updatedAnimal) =>
         {
             var animal = StaticData.animals.FirstOrDefault(a => a.Id == id);
@@ -51,10 +49,44 @@ public static class AnimalEndpoints
 
             animal.Name = updatedAnimal.Name;
             animal.Category = updatedAnimal.Category; 
-            animal.weight = updatedAnimal.weight > 0 ? updatedAnimal.weight : animal.weight;  
+            animal.weight = updatedAnimal.weight;
             animal.Color = updatedAnimal.Color; 
             
             return Results.Ok(animal);
         });
+        
+        app.MapPost("/animals", (Animal newAnimal) =>
+        {
+            var newId = StaticData.animals.Max(a => a.Id) + 1;
+            newAnimal.Id = newId; 
+            StaticData.animals.Add(newAnimal);
+            return Results.Created();
+        });
+        app.MapDelete("/animals/{id}", (int id) =>
+        {
+            var animal = StaticData.animals.FirstOrDefault(a => a.Id == id);
+            if (animal == null)
+            {
+                return Results.NotFound("No animal with that ID.");
+            }
+            else
+            {
+                StaticData.animals.Remove(animal);
+            }
+
+            return Results.Ok();
+        });
+
+        app.MapGet("/visits/{id}", (int id) =>
+        {
+            var visitsList = Visits.VisitsList.FindAll(a=>a.Animal.Id ==id);
+            return Results.Ok(visitsList);
+        });
+        
+        app.MapPut("/visits", (Visits newVisit) =>
+        {
+            Visits.VisitsList.Add(newVisit);
+            return Results.Ok(newVisit);
+        });
     }
-    }
+}
