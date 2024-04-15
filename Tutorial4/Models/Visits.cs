@@ -18,7 +18,7 @@ public class Visits
         DateTime = dateTime;
         Price = price;
         Desription = desription;
-        VisitsList.Add(this);
+        //VisitsList.Add(this);
     }
     
     public static List<Visits> VisitsList = new List<Visits>()
