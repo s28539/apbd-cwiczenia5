@@ -6,11 +6,11 @@ public class Animal
 {
     public int Id { get; set; }
     public string Name { get; set; }
-    public PetCategory Category { get; set; }
+    public string Category { get; set; }
     public double weight { get; set; }
-    public KnownColor Color { get; set; }
+    public string Color { get; set; }
 
-    public Animal(int id, string name, PetCategory category, double weight, KnownColor color)
+    public Animal(int id, string name, string category, double weight, string color)
     {
         Id = id;
         Name = name;
