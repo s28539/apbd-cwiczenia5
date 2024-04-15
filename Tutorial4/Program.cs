@@ -6,7 +6,7 @@ var builder = WebApplication.CreateBuilder(args);
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-builder.Services.AddControllers();
+//builder.Services.AddControllers();
 
 var app = builder.Build();
 
@@ -21,5 +21,5 @@ app.UseHttpsRedirection();
 // Minimal API
 app.MapAnimalEndpoints();
 //Controllers
-app.MapControllers();
+//app.MapControllers();
 app.Run();
