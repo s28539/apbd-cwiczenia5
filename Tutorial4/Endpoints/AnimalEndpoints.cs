@@ -21,13 +21,40 @@ public static class AnimalEndpoints
         });
         app.MapGet("/animals/{id}", (int id) =>
         {
-            return Results.Ok(id);
+            Animal Animal = null;
+            foreach (var TmpAnimal in StaticData.animals)
+            {
+                if (TmpAnimal.Id.Equals(id))
+                {
+                    Animal = TmpAnimal;
+                    break;
+                }
+            }
+            if (Animal == null)
+            {
+                return Results.Problem("No animal in database");
+            }
+            return Results.Ok(Animal);
         });
 
         app.MapPost("animals", () =>
         {
             return Results.Created();
         });
+        app.MapPut("/animals/{id}", (int id, Animal updatedAnimal) =>
+        {
+            var animal = StaticData.animals.FirstOrDefault(a => a.Id == id);
+            if (animal == null)
+            {
+                return Results.NotFound("No animal with that ID.");
+            }
 
+            animal.Name = updatedAnimal.Name;
+            animal.Category = updatedAnimal.Category; 
+            animal.weight = updatedAnimal.weight > 0 ? updatedAnimal.weight : animal.weight;  
+            animal.Color = updatedAnimal.Color; 
+            
+            return Results.Ok(animal);
+        });
     }
-}
+    }
